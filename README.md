@@ -1,5 +1,4 @@
 # Preda-Alin-Catalin-Admitere
-Preda Alin Catalin Admitere
 
 Exemplu actiuni:
 Clasa Candidat   -Afisarea datei nasterii plecand de la CNP

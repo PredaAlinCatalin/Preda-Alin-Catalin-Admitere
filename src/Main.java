@@ -180,11 +180,7 @@ public class Main {
         System.out.println(fac_mate_info.getDomeniuIndex(1).getExamen().getInformatii_examen());
         System.out.println();
 
-        System.out.println("Determinam examenul domeniului de licenta cu indicele 0 al facultatii");
         Examen examen = fac_mate_info.getDomeniuIndex(0).getExamen();
-        System.out.println("Calculam media candidatului cu indicele 0 din domeniul cu indicele 0 al facultatii");
-        System.out.println("Medie examen: " + fac_mate_info.getDomeniuIndex(0).getCandidat_service().getCandidatIndex(0).calculareMedieExamen(fac_mate_info.getDomeniuIndex(0).getExamen()));
-
         InformatiiAdmitere informatii_admitere = new InformatiiAdmitere(examen);
         informatii_admitere.getInformatiiPreAdmitere();
         informatii_admitere.getInformatiiPostAdmitere();
@@ -226,7 +222,6 @@ public class Main {
             else
                 profil = "Matematica-Informatica";
             Candidat c = new Candidat(nume, prenume, CNP, medie_bac, medie_proba_obligatorie, medie_proba_optionala, profil);
-            c.calculareMedieExamen(examen);
             fac_mate_info.getDomeniuIndex(0).getCandidat_service().adaugareCandidat(c);
         }
         fac_mate_info.getDomeniuIndex(0).getCandidat_service().afisareCandidati();

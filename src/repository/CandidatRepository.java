@@ -121,27 +121,23 @@ public class CandidatRepository{
     }
 
     public Candidat[] ordonareMedieExamen(){
-        Comparator<Candidat> comparatorCandidat = new Comparator<Candidat>() {
-
-            @Override
-            public int compare(Candidat c1, Candidat c2) {
-                if (c1.getMedie_examen() > c2.getMedie_examen())
-                        return 1;
-                else if (c1.getMedie_examen() < c2.getMedie_examen())
-                    return -1;
-                return 0;
-            }
-        };
-        Candidat temp[] = getCopieCandidat();
+        Candidat temp[] = getCopieCandidati();
+        Arrays.sort(temp);
         return temp;
 
     }
 
-    public Candidat[] getCopieCandidat(){
+    public Candidat[] getCopieCandidati(){
         Candidat temp[] = new Candidat[nr_candidati];
         for (int i = 0; i < nr_candidati; i++)
             temp[i] = new Candidat(candidat[i].getNume(), candidat[i].getPrenume(), candidat[i].getCNP(), candidat[i].getMedie_Bac(),
                     candidat[i].getMedie_proba_obligatorie(), candidat[i].getMedie_proba_optionala(), candidat[i].getProfil_liceu());
+        return temp;
+    }
+
+    public Candidat getCopieCandidat(Candidat candidat){
+        Candidat temp = new Candidat(candidat.getNume(), candidat.getPrenume(), candidat.getCNP(), candidat.getMedie_Bac(),
+                candidat.getMedie_proba_obligatorie(), candidat.getMedie_proba_optionala(), candidat.getProfil_liceu());
         return temp;
     }
 
@@ -152,7 +148,7 @@ public class CandidatRepository{
     public void redimensionareVector(int size){
         Candidat temp[] = new Candidat[nr_candidati + size];
         for (int i = 0; i < nr_candidati; i++)
-            temp[i] = candidat[i];
+            temp[i] = getCopieCandidat(candidat[i]);
         candidat = temp;
     }
 

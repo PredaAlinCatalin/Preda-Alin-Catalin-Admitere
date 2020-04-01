@@ -5,6 +5,8 @@ import model.Examen;
 import repository.CandidatRepository;
 import service.CandidatService;
 
+import java.util.Arrays;
+
 public class RezultateAdmitere {
     private Examen examen;
     private CandidatService candidati_buget;
@@ -24,6 +26,9 @@ public class RezultateAdmitere {
     }
     public void calculareRezultate(CandidatService candidat_service){
         Candidat aux[] = candidat_service.ordonareMedieExamen();
+        System.out.println("------------------------------------------------------------------------------");
+        for (int i = 0; i < aux.length; i++)
+            System.out.println(aux[i]);
         if (nr_locuri_buget > aux.length){
             Candidat aux1[] = new Candidat[aux.length];
             for (int i = 0; i < aux.length; i++)
@@ -33,7 +38,7 @@ public class RezultateAdmitere {
             for (int i = 0; i < nr_locuri_buget; i++)
                 candidati_buget.adaugareCandidat(aux[i]);
 
-            for (int i = 0; i <nr_locuri_taxa; i++)
+            for (int i = 0; i < nr_locuri_taxa; i++)
                 candidati_taxa.adaugareCandidat(aux[i + nr_locuri_buget]);
         }
         else{

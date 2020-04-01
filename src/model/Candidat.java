@@ -21,6 +21,7 @@ public class Candidat implements Comparable <Candidat>{
         this.medie_proba_obligatorie = medie_proba_obligatorie;
         this.medie_proba_optionala = medie_proba_optionala;
         this.profil_liceu = profil_liceu;
+        this.medie_examen = (medie_proba_obligatorie + medie_proba_optionala) / 2;
         nr_candidati++;
         id_candidat = nr_candidati;
 
@@ -28,52 +29,10 @@ public class Candidat implements Comparable <Candidat>{
 
     @Override
     public int compareTo(Candidat c){
-        return nume.compareTo(c.nume);
-    }
-    public double calculareMedieExamen(Examen examen){
-        double min = (medie_proba_obligatorie + medie_proba_optionala) / 2 - 4, max = 10;
-        if (examen.getNume().equals("Examen la domeniul de licenta Informatica")){
-
-            // subiectul de informatica e obligatoriu, luam cea mai mare nota dintre celelalte 3
-            double algebra = min + Math.random() * (max - min);
-            double analiza = min + Math.random() * (max - min);
-            double geometrie = min + Math.random() * (max - min);
-            double informatica = min + Math.random() * (max - min);
-
-            double nota_subiect_optional = algebra;
-            if (nota_subiect_optional < analiza)
-                nota_subiect_optional = analiza;
-            if (nota_subiect_optional < geometrie)
-                nota_subiect_optional = geometrie;
-
-            medie_examen = (nota_subiect_optional + informatica) / 2;
-            return medie_examen;
-        }
-        else if (examen.getNume().equals("Examen la domeniul de licenta Matematica")){
-            //subiectul de informatica nu mai este obligatoriu, luam primele 2 maxime
-            double algebra = min + Math.random() * (max - min);
-            double analiza = min + Math.random() * (max - min);
-            double geometrie = min + Math.random() * (max - min);
-            double informatica = min + Math.random() * (max - min);
-            double note[] = {algebra, analiza, geometrie, informatica};
-            Arrays.sort(note);
-
-            medie_examen = (note[2] + note[3]) / 2;
-            return medie_examen;
-        }
-        else if (examen.getNume().equals("Examen la domeniul de licenta Calculatoare si tehnologia informatiei")){
-            //subiectul de matematica este obligatoriu
-            double matematica = min + Math.random() * (max - min);
-            double fizica = min + Math.random() * (max - min);
-            double informatica = min + Math.random() * (max - min);
-
-            double nota_subiect_optional = fizica;
-            if (nota_subiect_optional < informatica)
-                nota_subiect_optional = informatica;
-            medie_examen = (nota_subiect_optional + matematica) / 2;
-            return medie_examen;
-        }
-
+        if (medie_examen > c.medie_examen)
+            return -1;
+        else if (medie_examen < c.medie_examen)
+            return 1;
         return 0;
     }
 
@@ -197,6 +156,7 @@ public class Candidat implements Comparable <Candidat>{
         this.medie_examen = medie_examen;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -221,7 +181,6 @@ public class Candidat implements Comparable <Candidat>{
     public String toString() {
         DecimalFormat df2 = new DecimalFormat("#.##");
 
-
         return "Candidat{" +
                 "nume='" + nume + '\'' +
                 ", prenume='" + prenume + '\'' +
@@ -230,7 +189,7 @@ public class Candidat implements Comparable <Candidat>{
                 ", medie_Bac=" + df2.format(medie_Bac) +
                 ", medie_proba_obligatorie=" + df2.format(medie_proba_obligatorie) +
                 ", medie_proba_optionala=" + df2.format(medie_proba_optionala) +
-                (medie_examen == 0 ? "" : ", medie_examen=" + df2.format(medie_examen)) + // daca inca nu s-a dat examenul
+                (medie_examen == 0 ? "" : ", medie_examen=" + df2.format(medie_examen)) +
                 ", profil_liceu='" + profil_liceu + '\'' +
                 '}';
     }

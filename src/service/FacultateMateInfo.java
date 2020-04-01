@@ -67,6 +67,40 @@ public class FacultateMateInfo implements Facultate {
         return domeniu;
     }
 
+    public String getNume() {
+        return nume;
+    }
 
+    public void setNume(String nume) {
+        this.nume = nume;
+    }
+
+    public void setDomeniu(Domeniu[] domeniu) {
+        this.domeniu = domeniu;
+    }
+
+    public int getNr_domenii() {
+        return nr_domenii;
+    }
+
+    public void setNr_domenii(int nr_domenii) {
+        this.nr_domenii = nr_domenii;
+    }
+
+    public int getNr_maxim_domenii() {
+        return nr_maxim_domenii;
+    }
+
+    public void setNr_maxim_domenii(int nr_maxim_domenii) {
+        this.nr_maxim_domenii = nr_maxim_domenii;
+    }
+
+    public InformatiiAdmitere getInformatii_admitere() {
+        return informatii_admitere;
+    }
+
+    public void setInformatii_admitere(InformatiiAdmitere informatii_admitere) {
+        this.informatii_admitere = informatii_admitere;
+    }
 }
 

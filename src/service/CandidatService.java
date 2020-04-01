@@ -36,7 +36,8 @@ public class CandidatService {
     public Candidat gasireCandidatMedieBacMaxima() {
         return candidat_repository.gasireCandidatMedieBacMaxima();
     }
-    public Candidat[] getCopieCandidat(){return candidat_repository.getCopieCandidat();}
+    public Candidat[] getCopieCandidati(){return candidat_repository.getCopieCandidati();}
+    public Candidat getCopieCandidat(Candidat c){return candidat_repository.getCopieCandidat(c);}
     public Candidat[] ordonareMedieExamen(){return candidat_repository.ordonareMedieExamen();}
     public Candidat getCandidatIndex(int index){
         return candidat_repository.getCandidatIndex(index);

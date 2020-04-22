@@ -3,96 +3,75 @@ package repository;
 import model.Candidat;
 import model.Domeniu;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class CandidatRepository{
-    private Candidat candidat[];
-    private int nr_candidati;
-    private int nr_maxim_candidati = 5;
+    private ArrayList<Candidat> candidat;
 
     public CandidatRepository() {
-        candidat = new Candidat[1];
-        nr_candidati = 0;
+        candidat = new ArrayList<>();
     }
 
     public void afisareCandidati(){
-        System.out.println("Numar candidati: " + nr_candidati);
-        for (int i = 0; i < nr_candidati; i++)
-            System.out.println(candidat[i]);
+        System.out.println("Numar candidati: " + candidat.size());
+        for (int i = 0; i < candidat.size(); i++)
+            System.out.println(candidat.get(i));
         System.out.println();
     }
 
     public void adaugareCandidat(Candidat c){
         boolean ok2 = true;
-        for (int i = 0; i < nr_candidati; i++)
-            if (c.equals(candidat[i])){
+        for (int i = 0; i < candidat.size(); i++)
+            if (c.equals(candidat.get(i))){
                 ok2 = false;
                 break;
             }
         if (ok2 == true) {
-            redimensionareVector(1);
-            candidat[nr_candidati] = new Candidat(c.getNume(), c.getPrenume(), c.getCNP(), c.getMedie_Bac(), c.getMedie_proba_obligatorie(), c.getMedie_proba_optionala(), c.getProfil_liceu());
-            nr_candidati++;
+            candidat.add(candidat.size(),new Candidat(c.getNume(), c.getPrenume(), c.getCNP(), c.getMedie_Bac(), c.getMedie_proba_obligatorie(), c.getMedie_proba_optionala(), c.getProfil_liceu()));
         }
     }
 
     public void adaugareCandidat(Candidat c, Domeniu domeniu){
         boolean ok = true;
-        for (int j = 0; j < domeniu.getCandidat_service().getCandidat().length; j++)
-            if (c.equals(domeniu.getCandidat_service().getCandidatIndex(j))){
-                ok = false;
-                break;
-            }
+
+        if (domeniu.getCandidat_service().getCandidat().contains(c))
+            ok = false;
+
         if (ok == true) {
             boolean ok2 = true;
-            for (int i = 0; i < nr_candidati; i++)
-                if (c.equals(candidat[i])){
-                    ok2 = false;
-                    break;
-                }
+
+            if (candidat.contains(c))
+                ok2 = false;
             if (ok2 == true) {
-                redimensionareVector(1);
-                candidat[nr_candidati] = new Candidat(c.getNume(), c.getPrenume(), c.getCNP(), c.getMedie_Bac(), c.getMedie_proba_obligatorie(), c.getMedie_proba_optionala(), c.getProfil_liceu());
-                nr_candidati++;
+                candidat.add(candidat.size(),new Candidat(c.getNume(), c.getPrenume(), c.getCNP(), c.getMedie_Bac(), c.getMedie_proba_obligatorie(), c.getMedie_proba_optionala(), c.getProfil_liceu()));
             }
         }
     }
 
-    public void adaugareCandidat(Candidat c, Domeniu domeniu[]){
+    public void adaugareCandidat(Candidat c, ArrayList<Domeniu> domeniu){
         boolean ok = true;
-        for (int i = 0; i < domeniu.length && ok == true; i++)
-            for (int j = 0; j < domeniu[i].getCandidat_service().getCandidat().length; j++)
-                if (candidat.equals(domeniu[i].getCandidat_service().getCandidatIndex(j))){
-                    ok = false;
-                    break;
-                }
+        for (int i = 0; i < domeniu.size() && ok == true; i++)
+            if (domeniu.get(i).getCandidat_service().getCandidat().contains(c))
+                ok = false;
         if (ok == true) {
             boolean ok2 = true;
-            for (int i = 0; i < nr_candidati; i++)
-                if (c.equals(candidat[i])){
-                    ok2 = false;
-                    break;
-                }
+            if (candidat.contains(c))
+                ok2 = false;
             if (ok2 == true) {
-                redimensionareVector(1);
-                candidat[nr_candidati] = new Candidat(c.getNume(), c.getPrenume(), c.getCNP(), c.getMedie_Bac(), c.getMedie_proba_obligatorie(), c.getMedie_proba_optionala(), c.getProfil_liceu());
-                nr_candidati++;
+                candidat.add(candidat.size(),new Candidat(c.getNume(), c.getPrenume(), c.getCNP(), c.getMedie_Bac(), c.getMedie_proba_obligatorie(), c.getMedie_proba_optionala(), c.getProfil_liceu()));
             }
         }
     }
 
     public void stergerePozitieCandidat(int index){
-        try{
 
-            for (int i = index; i < nr_candidati - 1; i++)
-                candidat[i] = candidat[i + 1];
-            candidat[nr_candidati - 1] = null;
-            nr_candidati--;
+        try{
+            candidat.remove(index);
 
         }
-        catch (ArrayIndexOutOfBoundsException e){
-            System.out.println("Index-ul este incorect(este " + (index < 0 ? "negativ" : "mai mare decat dimensiunea vectorului") + ")" + e);
+        catch (IndexOutOfBoundsException e){
+            e.printStackTrace();
         }
     }
 
@@ -102,8 +81,8 @@ public class CandidatRepository{
     }
 
     public int gasireCandidat(String CNP){
-        for (int i = 0; i < nr_candidati; i++)
-            if (CNP.equals(candidat[i].getCNP()))
+        for (int i = 0; i < candidat.size(); i++)
+            if (CNP.equals(candidat.get(i).getCNP()))
                 return i;
         return -1;
     }
@@ -112,26 +91,26 @@ public class CandidatRepository{
     {
         double maxim = 0;
         int poz = -1;
-        for (int i = 0; i < nr_candidati; i++)
-            if (candidat[i].getMedie_Bac() > maxim) {
-                maxim = candidat[i].getMedie_Bac();
+        for (int i = 0; i < candidat.size(); i++)
+            if (candidat.get(i).getMedie_Bac() > maxim) {
+                maxim = candidat.get(i).getMedie_Bac();
                 poz = i;
             }
         return getCandidatIndex(poz);
     }
 
-    public Candidat[] ordonareMedieExamen(){
-        Candidat temp[] = getCopieCandidati();
-        Arrays.sort(temp);
+    public ArrayList<Candidat> ordonareMedieExamen(){
+        ArrayList<Candidat> temp = getCopieCandidati();
+        Collections.sort(temp);
         return temp;
 
     }
 
-    public Candidat[] getCopieCandidati(){
-        Candidat temp[] = new Candidat[nr_candidati];
-        for (int i = 0; i < nr_candidati; i++)
-            temp[i] = new Candidat(candidat[i].getNume(), candidat[i].getPrenume(), candidat[i].getCNP(), candidat[i].getMedie_Bac(),
-                    candidat[i].getMedie_proba_obligatorie(), candidat[i].getMedie_proba_optionala(), candidat[i].getProfil_liceu());
+    public ArrayList<Candidat> getCopieCandidati(){
+        ArrayList<Candidat> temp = new ArrayList<>(candidat.size());
+        for (int i = 0; i < candidat.size(); i++)
+            temp.add(new Candidat(candidat.get(i).getNume(), candidat.get(i).getPrenume(), candidat.get(i).getCNP(), candidat.get(i).getMedie_Bac(),
+                    candidat.get(i).getMedie_proba_obligatorie(), candidat.get(i).getMedie_proba_optionala(), candidat.get(i).getProfil_liceu()));
         return temp;
     }
 
@@ -142,37 +121,14 @@ public class CandidatRepository{
     }
 
     public Candidat getCandidatIndex(int index){
-        return candidat[index];
+        return candidat.get(index);
     }
 
-    public void redimensionareVector(int size){
-        Candidat temp[] = new Candidat[nr_candidati + size];
-        for (int i = 0; i < nr_candidati; i++)
-            temp[i] = getCopieCandidat(candidat[i]);
-        candidat = temp;
-    }
-
-    public Candidat[] getCandidat() {
+    public ArrayList<Candidat> getCandidat() {
         return candidat;
     }
 
-    public int getNr_candidati() {
-        return nr_candidati;
-    }
-
-    public void setNr_candidati(int nr_candidati) {
-        this.nr_candidati = nr_candidati;
-    }
-
-    public int getNr_maxim_candidati() {
-        return nr_maxim_candidati;
-    }
-
-    public void setNr_maxim_candidati(int nr_maxim_candidati) {
-        this.nr_maxim_candidati = nr_maxim_candidati;
-    }
-
-    public void setCandidat(Candidat[] candidat) {
+    public void setCandidat(ArrayList<Candidat> candidat) {
         this.candidat = candidat;
     }
 }

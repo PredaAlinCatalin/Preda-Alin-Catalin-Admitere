@@ -1,10 +1,10 @@
+import constante.Constante;
 import model.*;
-import service.CandidatService;
-import service.DomeniuInformatica;
-import service.DomeniuMatematica;
-import service.FacultateMateInfo;
-import java.util.Random;
-import java.util.Arrays;
+import service.*;
+
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class Main {
     public static String generareCNP(){
@@ -102,7 +102,7 @@ public class Main {
         return CNP;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Candidat c1 = new Candidat("Predi", "Alin-Catalin", "1990801123456", 9.97, 9.96, 10, "Stiinte ale naturii");
         Candidat c2 = new Candidat("Preda", "Alin-Catalin", "1990801123457", 9.98, 9.95, 10, "Stiinte ale naturii");
         Candidat c3 = new Candidat("Predu", "Alin-Catalin", "1990801123458", 9.99, 9.94, 10, "Stiinte ale naturii");
@@ -131,7 +131,7 @@ public class Main {
         candidat_service.stergereCandidat(c1.getCNP()); // stergem un candidat dupa CNP-ul lui
         candidat_service.afisareCandidati();
 
-        System.out.println("Stergem un candidat dupa poZZtia lui in vectorul de candidati");
+        System.out.println("Stergem un candidat dupa pozitia lui in vectorul de candidati");
         candidat_service.stergerePozitieCandidat(0);
         candidat_service.afisareCandidati();
 
@@ -160,7 +160,7 @@ public class Main {
         domeniu_info.getCandidat_service().afisareCandidati();
 
         System.out.println("Sortam vectorul de candidati al domeniului info");
-        Arrays.sort(domeniu_info.getCandidat_service().getCandidat());
+        Collections.sort(domeniu_info.getCandidat_service().getCandidat());
         domeniu_info.getCandidat_service().afisareCandidati();
 
         System.out.println("Cream domeniul Matematica al facultatii de mate-info si adaugam un candidat");
@@ -182,8 +182,8 @@ public class Main {
 
         Examen examen = fac_mate_info.getDomeniuIndex(0).getExamen();
         InformatiiAdmitere informatii_admitere = new InformatiiAdmitere(examen);
-        informatii_admitere.getInformatiiPreAdmitere();
-        informatii_admitere.getInformatiiPostAdmitere();
+        informatii_admitere.getInformatii_preadmitere();
+        informatii_admitere.getInformatii_postadmitere();
 
         RepartizareSali repartizare_sali = new RepartizareSali(5, 30);
         repartizare_sali.repartizareCandidat(c1);
@@ -222,13 +222,89 @@ public class Main {
             else
                 profil = "Matematica-Informatica";
             Candidat c = new Candidat(nume, prenume, CNP, medie_bac, medie_proba_obligatorie, medie_proba_optionala, profil);
-            fac_mate_info.getDomeniuIndex(0).getCandidat_service().adaugareCandidat(c);
+            fac_mate_info.getDomeniuIndex(0).getCandidat_service().adaugareCandidat(c, fac_mate_info.getDomeniu());
         }
         fac_mate_info.getDomeniuIndex(0).getCandidat_service().afisareCandidati();
 
         System.out.println("Calculam rezultatele de la admitere");
         fac_mate_info.getDomeniuIndex(0).getRezultate_admitere().calculareRezultate(fac_mate_info.getDomeniuIndex(0).getCandidat_service());
         fac_mate_info.getDomeniuIndex(0).getRezultate_admitere().afisareRezultateAdmitere();
+
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("Testare etapa a 2-a");
+
+        CandidatIOService candidat_io_service = CandidatIOService.getInstanta();
+        candidat_io_service.scriereDate(fac_mate_info.getDomeniuIndex(0).getCandidat_service()); // Luam informatiile din domeniul Informatica al facultatii de MateInfo
+
+        CandidatService candidat_service_test = new CandidatService();
+        candidat_service_test.setCandidat(candidat_io_service.citireDate());
+        System.out.println("Afisam datele citite din fisierul csv: ");
+        candidat_service_test.afisareCandidati();
+
+
+
+        Examen examen1 = new Examen(Constante.examen_info);
+        Examen examen2 = new Examen(Constante.examen_mate);
+        Examen examen3 = new Examen(Constante.examen_cti);
+
+        ArrayList<Examen> lista_examene = new ArrayList<>();
+        lista_examene.add(examen1);
+        lista_examene.add(examen2);
+        lista_examene.add(examen3);
+
+        ExamenIOService examen_io_service = ExamenIOService.getInstanta();
+        examen_io_service.scriereDate(lista_examene);
+
+        ArrayList<Examen> lista_examene_fisier = examen_io_service.citireDate();
+
+        System.out.println("Afisam datele citite din fisierul csv: ");
+        System.out.println(lista_examene_fisier.size());
+        for (int i = 0; i < lista_examene_fisier.size(); i++)
+            System.out.println(lista_examene_fisier.get(i));
+        System.out.println();
+
+        InformatiiAdmitere informatii_admitere1 = new InformatiiAdmitere(examen1);
+        InformatiiAdmitere informatii_admitere2 = new InformatiiAdmitere(examen2);
+        InformatiiAdmitere informatii_admitere3 = new InformatiiAdmitere(examen3);
+
+        ArrayList<InformatiiAdmitere> lista_informatii_admitere = new ArrayList<>();
+        lista_informatii_admitere.add(informatii_admitere1);
+        lista_informatii_admitere.add(informatii_admitere2);
+        lista_informatii_admitere.add(informatii_admitere3);
+
+        InformatiiAdmitereIOService informatii_admitere_io_service = InformatiiAdmitereIOService.getInstanta();
+        informatii_admitere_io_service.scriereDate(lista_informatii_admitere);
+
+        ArrayList<InformatiiAdmitere> lista_informatii_admitere_fisier = informatii_admitere_io_service.citireDate();
+
+        System.out.println("Afisam datele citite din fisierul csv: ");
+        System.out.println(lista_informatii_admitere_fisier.size());
+        for (int i = 0; i < lista_informatii_admitere_fisier.size(); i++)
+            System.out.println(lista_informatii_admitere_fisier.get(i));
+        System.out.println();
+
+        RepartizareSali repartizare_sali1 = new RepartizareSali(4, 30);
+        RepartizareSali repartizare_sali2 = new RepartizareSali(6, 35);
+        RepartizareSali repartizare_sali3 = new RepartizareSali(5, 40);
+
+        ArrayList<RepartizareSali> lista_repartizare_sali = new ArrayList<>();
+        lista_repartizare_sali.add(repartizare_sali1);
+        lista_repartizare_sali.add(repartizare_sali2);
+        lista_repartizare_sali.add(repartizare_sali3);
+
+        RepartizareSaliIOService repartizare_sali_io_service = RepartizareSaliIOService.getInstanta();
+        repartizare_sali_io_service.scriereDate(lista_repartizare_sali);
+
+        ArrayList<RepartizareSali> lista_repartizare_sali_fisier = repartizare_sali_io_service.citireDate();
+
+        System.out.println("Afisam datele citite din fisierul csv: ");
+        System.out.println(lista_repartizare_sali_fisier.size());
+        for (int i = 0; i < lista_repartizare_sali_fisier.size(); i++)
+            System.out.println(lista_repartizare_sali_fisier.get(i));
+        
+
+
+
 
     }
 }

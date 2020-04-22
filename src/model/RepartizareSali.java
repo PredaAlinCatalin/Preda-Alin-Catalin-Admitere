@@ -36,4 +36,12 @@ public class RepartizareSali {
     public void setCapacitate_sala(int capacitate_sala) {
         this.capacitate_sala = capacitate_sala;
     }
+
+    @Override
+    public String toString() {
+        return "RepartizareSali{" +
+                "nr_sali=" + nr_sali +
+                ", capacitate_sala=" + capacitate_sala +
+                '}';
+    }
 }
